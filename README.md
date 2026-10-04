@@ -72,3 +72,9 @@ This code supports the paper's narrow claim: an **experiment-conditioned rank/nu
 ## Repository status
 
 Research reproducibility repository for the current manuscript version. The mathematical identities are exact; reported SVD values are floating-point diagnostics and may differ in the last digits across BLAS/LAPACK implementations.
+
+## Associated paper
+
+**Exact Experiment-Conditioned Parameter Redundancy in the Seven-Parameter PEMFC Benchmark**  
+Author: **Ghassan Malkawi**  
+[Read the current manuscript PDF](https://drive.google.com/file/d/1XVYzgoSeDy-afGw_nRhShVgbe8Oz-MH5/view?usp=drivesdk)
