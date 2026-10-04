@@ -6,6 +6,8 @@ Reproducibility materials for the manuscript:
 
 **Exact Experiment-Conditioned Parameter Redundancy in the Seven-Parameter PEMFC Benchmark**
 
+**Repository author: Ghassan Malkawi**
+
 This repository reproduces the paper's core mathematical/numerical checks for the common seven-free-parameter Amphlett-type PEMFC benchmark.
 
 ## What is reproduced
