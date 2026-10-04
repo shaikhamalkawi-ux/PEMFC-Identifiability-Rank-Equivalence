@@ -1,5 +1,7 @@
 # PEMFC Identifiability: Rank and Equivalence
 
+[![reproduce](https://github.com/shaikhamalkawi-ux/PEMFC-Identifiability-Rank-Equivalence/actions/workflows/reproduce.yml/badge.svg)](https://github.com/shaikhamalkawi-ux/PEMFC-Identifiability-Rank-Equivalence/actions/workflows/reproduce.yml)
+
 Reproducibility materials for the manuscript:
 
 **Exact Experiment-Conditioned Parameter Redundancy in the Seven-Parameter PEMFC Benchmark**
