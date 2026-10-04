@@ -18,3 +18,8 @@ Primary public source:
   - c4: 1.5/1.5 bar, 343.15 K
 
 The repository intentionally does not repackage unrelated benchmark assets. For the complete six-stack source dataset, use the upstream repository and cite the original paper.
+
+
+## Redistribution note
+
+The upstream repository is publicly accessible, but its current root does not expose a standalone LICENSE file. Provenance and citation are provided here; redistribution terms should be confirmed with the upstream maintainer before any permanent archival redistribution beyond this scholarly reproducibility repository.
