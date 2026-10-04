@@ -67,8 +67,16 @@ designs = {
 
 fig, ax = plt.subplots(figsize=(7.3, 5.2))
 idx = np.arange(1, 8)
+styles = {
+    "c1 only (rank 5)": ("o", "-"),
+    "c2+c3+c4, same T (rank 6)": ("s", "--"),
+    "c1+c2, two T (rank 7)": ("^", "-."),
+    "all four conditions (rank 7)": ("D", ":"),
+}
 for label, M in designs.items():
-    ax.plot(idx, normalized_svd(M), marker="o", linewidth=1.8, label=label)
+    marker, linestyle = styles[label]
+    ax.plot(idx, normalized_svd(M), marker=marker, linestyle=linestyle,
+            linewidth=1.8, label=label)
 ax.set_yscale("log"); ax.set_xticks(idx)
 ax.set_xlabel("Singular-value index")
 ax.set_ylabel("Column-normalized singular value")
