@@ -1,4 +1,4 @@
-"""Generate the two manuscript figures from locked repository values."""
+"""Generate the three manuscript figures from locked repository values."""
 
 from __future__ import annotations
 
@@ -85,6 +85,41 @@ ax.grid(True, which="both", alpha=0.3); ax.legend(loc="best", frameon=True)
 fig.tight_layout()
 fig.savefig(OUT/"Figure_2_Normalized_Singular_Spectra.png", dpi=300, bbox_inches="tight")
 fig.savefig(OUT/"Figure_2_Normalized_Singular_Spectra.pdf", bbox_inches="tight")
+plt.close(fig)
+
+# Figure 3 — conditioning robustness across the published lambda range
+lams = np.linspace(10.0, 24.0, 501)
+cond_c12, cond_balanced, cond_all = [], [], []
+idx_bal = {
+    "c1": [0,2,4,6,8,10,12,14],
+    "c2": [0,2,4,6,8,10,12,14],
+    "c3": [0,2,5,7,9,12,14],
+    "c4": [0,2,5,7,9,12,14],
+}
+for lam in lams:
+    JJ = {}
+    for name in ("c1","c2","c3","c4"):
+        c = W250[name]
+        JJ[name] = jacobian_airfed(c["I"], c["T"], A, l_um, Jmax, Ncell, lam, c["PC"])
+    M12 = np.vstack([JJ["c1"], JJ["c2"]])
+    Mall = np.vstack([JJ["c1"], JJ["c2"], JJ["c3"], JJ["c4"]])
+    Mbal = np.vstack([JJ[n][idx_bal[n]] for n in ("c1","c2","c3","c4")])
+    s12 = normalized_svd(M12); sa = normalized_svd(Mall); sb = normalized_svd(Mbal)
+    cond_c12.append(s12[0]/s12[-1]); cond_all.append(sa[0]/sa[-1]); cond_balanced.append(sb[0]/sb[-1])
+
+fig, ax = plt.subplots(figsize=(7.3, 5.2))
+ax.plot(lams, cond_c12, linestyle="-", linewidth=1.8, label="c1+c2 (30 observations)")
+ax.plot(lams, cond_balanced, linestyle="--", linewidth=1.8, label="four conditions, balanced 30 observations")
+ax.plot(lams, cond_all, linestyle=":", linewidth=1.8, label="all four conditions (60 observations)")
+ax.set_yscale("log")
+ax.set_xlabel(r"Membrane water-content parameter $\lambda$")
+ax.set_ylabel(r"Column-normalized $\mathrm{cond}_2$")
+ax.set_title(r"Conditioning robustness over the published $\lambda$ range")
+ax.grid(True, which="both", alpha=0.3)
+ax.legend(loc="best", frameon=True)
+fig.tight_layout()
+fig.savefig(OUT/"Figure_3_Lambda_Conditioning_Robustness.png", dpi=300, bbox_inches="tight")
+fig.savefig(OUT/"Figure_3_Lambda_Conditioning_Robustness.pdf", bbox_inches="tight")
 plt.close(fig)
 
 print(f"Figures written to {OUT}")
