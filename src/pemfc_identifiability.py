@@ -18,8 +18,8 @@ def oxygen_partial_pressure_airfed(
     P_c_bar: float,
     RH_c: float = 1.0,
 ) -> np.ndarray:
-    """Common air-fed cathode law audited in the manuscript."""
-    I = np.asarray(I, dtype=float)
+    """Common air-fed cathode law used in the manuscript analysis."""
+    I = np.asarray(I)
     p_h2o = water_vapor_pressure(T)
     gamma = 0.291 / (T**0.832 * A_cm2)
     return (P_c_bar - RH_c*p_h2o) / (
@@ -38,6 +38,21 @@ def oxygen_concentration_airfed(
     return p_o2 / 5.08e6 * np.exp(498.0/T)
 
 
+def membrane_factor(
+    I: np.ndarray,
+    T: float,
+    A_cm2: float,
+    l_um: float,
+) -> np.ndarray:
+    """Known positive membrane-resistance factor K_m(I,T)."""
+    I = np.asarray(I)
+    j = I / A_cm2
+    eT = np.exp(4.18*(T - 303.0)/T)
+    num = 181.6 * (1.0 + 0.03*j + 0.062*(T/303.0)**2 * j**2.5)
+    l_cm = l_um * 1e-4
+    return (num / eT) * (l_cm / A_cm2)
+
+
 def jacobian_airfed(
     I: np.ndarray,
     T: float,
@@ -48,30 +63,89 @@ def jacobian_airfed(
     lam: float,
     P_c_bar: float,
 ) -> np.ndarray:
-    """Analytic seven-column voltage Jacobian used for the 250 W audit.
+    """Analytic seven-column voltage Jacobian used for the 250 W analysis.
 
     Column order:
     (xi1, xi2, xi3, xi4, lambda, beta, Rc).
     """
     I = np.asarray(I, dtype=float)
-    J = I / A_cm2
+    j = I / A_cm2
     C = oxygen_concentration_airfed(I, A_cm2, T, P_c_bar)
-
-    eT = np.exp(4.18*(T - 303.0)/T)
-    num = 181.6 * (1.0 + 0.03*J + 0.062*(T/303.0)**2 * J**2.5)
-    l_cm = l_um * 1e-4
-    K = (num / eT) * (l_cm / A_cm2)
-    D = lam - 0.634 - 3.0*J
+    K_m = membrane_factor(I, T, A_cm2, l_um)
+    D = lam - 0.634 - 3.0*j
 
     return np.column_stack([
         Ncell*np.ones_like(I),
         Ncell*T*np.ones_like(I),
         Ncell*T*np.log(C),
         Ncell*T*np.log(I),
-        Ncell*I*K/D**2,
-        Ncell*np.log(1.0 - J/Jmax_Acm2),
+        Ncell*I*K_m/D**2,
+        Ncell*np.log(1.0 - j/Jmax_Acm2),
         -Ncell*I,
     ])
+
+
+def parameter_dependent_voltage_airfed(
+    params: np.ndarray,
+    I: np.ndarray,
+    T: float,
+    A_cm2: float,
+    l_um: float,
+    Jmax_Acm2: float,
+    Ncell: int,
+    P_c_bar: float,
+) -> np.ndarray:
+    """Parameter-dependent part of stack voltage for derivative verification.
+
+    Terms independent of the seven fitted parameters are omitted because their
+    derivatives are identically zero. Parameter order matches jacobian_airfed.
+    """
+    xi1, xi2, xi3, xi4, lam, beta, Rc = np.asarray(params)
+    I = np.asarray(I, dtype=float)
+    j = I / A_cm2
+    C = oxygen_concentration_airfed(I, A_cm2, T, P_c_bar)
+    K_m = membrane_factor(I, T, A_cm2, l_um)
+    R_m = K_m / (lam - 0.634 - 3.0*j)
+
+    activation = xi1 + xi2*T + xi3*T*np.log(C) + xi4*T*np.log(I)
+    ohmic = -I*(R_m + Rc)
+    concentration = beta*np.log(1.0 - j/Jmax_Acm2)
+    return Ncell*(activation + ohmic + concentration)
+
+
+def complex_step_jacobian_airfed(
+    params: np.ndarray,
+    I: np.ndarray,
+    T: float,
+    A_cm2: float,
+    l_um: float,
+    Jmax_Acm2: float,
+    Ncell: int,
+    P_c_bar: float,
+    h: float = 1e-30,
+) -> np.ndarray:
+    """Independent complex-step Jacobian of the parameter-dependent voltage."""
+    params = np.asarray(params, dtype=float)
+    cols = []
+    for q in range(params.size):
+        z = params.astype(complex)
+        z[q] += 1j*h
+        v = parameter_dependent_voltage_airfed(
+            z, I, T, A_cm2, l_um, Jmax_Acm2, Ncell, P_c_bar
+        )
+        cols.append(np.imag(v)/h)
+    return np.column_stack(cols)
+
+
+def max_relative_column_discrepancy(A: np.ndarray, B: np.ndarray) -> float:
+    """Maximum relative 2-norm discrepancy across matching matrix columns."""
+    if A.shape != B.shape:
+        raise ValueError("Matrix shapes must match")
+    out = []
+    for q in range(A.shape[1]):
+        denom = max(np.linalg.norm(B[:, q]), np.finfo(float).tiny)
+        out.append(np.linalg.norm(A[:, q]-B[:, q]) / denom)
+    return float(max(out))
 
 
 def normalized_svd(J: np.ndarray) -> np.ndarray:
