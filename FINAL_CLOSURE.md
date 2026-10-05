@@ -1,24 +1,29 @@
-# Final reproducibility closure
+# v6 reproducibility closure
 
-Closure date: 5 October 2026
+Closure date: 6 October 2026
 
 Associated manuscript:
 
-**When Seven PEMFC Parameters Are Not Seven Identifiable Quantities: Exact Redundancy and Rank-Aware Experimental Design**
+**Experiment-Conditioned Parameter Redundancy in Seven-Parameter PEMFC Models: Exact Equivalence and Rank-Aware Experimental Design**
 
 Repository author: **Ghassan Malkawi**
 
-## Locked reproducibility status
+## v6 closure status
 
-- Exact fixed-temperature xi1/xi2 invariance: PASS.
-- Ballard feasible-equivalence reproduction: PASS.
+- Complete Ballard Mark V voltage-model replay: PASS.
+- Published rounded Ballard THRO SSE reproduction: PASS.
+- Exact fixed-temperature voltage/SSE invariance: PASS.
+- Fixed-pressure second null direction: PASS.
 - Full seven-column analytic Jacobian audit: PASS.
-- Single-condition 250 W rank 5 result: PASS.
-- Same-temperature pressure-diversity rank 6 result: PASS.
-- Two-temperature c1+c2 rank 7 result with severe conditioning: PASS.
-- All-four-condition conditioning improvement: PASS.
-- Automated workflow: PASS on Python 3.10, 3.11, and 3.12.
+- Independent complex-step derivative check: PASS.
+- Single-condition rank 5: PASS.
+- Same-temperature pressure-diversity rank 6: PASS.
+- c1+c2 local rank 7 with severe conditioning: PASS.
+- Deterministic equal-budget four-condition 30-observation design: PASS.
+- 501-point lambda robustness over published [10,24]: PASS.
+- Common parameter-box scaling robustness: PASS.
+- Automated Python 3.10-3.12 workflow remains the CI target.
 
-The manuscript and repository use the same benchmark convention. Structurally zero singular values are recorded as platform-dependent machine-zero quantities in `RESULTS.md`; the analytic ranks, exact invariance results, and full-rank conditioning targets are unchanged.
+The repository now uses the complete Ballard model for the numerical invariance replay; the earlier simplified common-term demonstration has been superseded.
 
-The repository supports the narrow experiment-conditioned rank/nullspace and equivalence-class contribution only. It does not claim novelty for PEMFC identifiability in general, coefficient grouping, or separable regression.
+The scope remains bounded: fixed-temperature finite equivalence is a non-injectivity result; multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability.
