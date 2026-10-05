@@ -1,0 +1,176 @@
+% Core equations for:
+% When Seven PEMFC Parameters Are Not Seven Identifiable Quantities:
+% Exact Redundancy and Rank-Aware Experimental Design
+% Repository author: Ghassan Malkawi
+
+\newcommand{\COtwo}{C_{O_2}}
+\newcommand{\POtwo}{P_{O_2}}
+\newcommand{\Jv}{J_V}
+\newcommand{\Aa}{A_a}
+\newcommand{\Ac}{A_c}
+
+% Seven-free-parameter vector
+\[
+X=(\xi_1,\xi_2,\xi_3,\xi_4,\lambda,\beta,R_c)^T.
+\]
+
+% Activation term
+\[
+V_{\mathrm{act},k}
+=
+-\left[
+\xi_1+\xi_2T_k+\xi_3T_k\ln(\COtwo_k)+\xi_4T_k\ln(I_k)
+\right].
+\]
+
+% Activation design matrix
+\[
+\theta_a=(\xi_1,\xi_2,\xi_3,\xi_4)^T,
+\qquad
+a_k=
+\left[
+1,\;T_k,\;T_k\ln(\COtwo_k),\;T_k\ln(I_k)
+\right],
+\]
+\[
+\Aa=
+\begin{bmatrix}
+a_1\\
+\vdots\\
+a_n
+\end{bmatrix}.
+\]
+
+% Conditional activation-block identifiability
+\[
+\theta_a\mapsto \Aa\theta_a
+\text{ is injective}
+\iff
+\operatorname{rank}(\Aa)=4.
+\]
+\[
+\Aa(\theta_a-\theta_a')=0
+\iff
+\theta_a-\theta_a'\in\operatorname{null}(\Aa).
+\]
+
+% Fixed-temperature exact equivalence
+\[
+T_k=T_0
+\quad\Longrightarrow\quad
+\xi_1'=\xi_1-T_0\delta,
+\qquad
+\xi_2'=\xi_2+\delta,
+\]
+\[
+\xi_1'+T_0\xi_2'
+=
+\xi_1+T_0\xi_2.
+\]
+\[
+\kappa=\xi_1+T_0\xi_2.
+\]
+
+% Universal fixed-temperature Jacobian null vector
+\[
+v_1=(-T_0,1,0,0,0,0,0)^T,
+\qquad
+\Jv v_1=0,
+\qquad
+\operatorname{rank}(\Jv)\le 6.
+\]
+
+% Fixed oxygen partial pressure
+\[
+\kappa_0=
+\xi_1+T_0\xi_2+T_0\ln(C_0)\xi_3,
+\]
+\[
+v_2=
+(-T_0\ln C_0,0,1,0,0,0,0)^T,
+\qquad
+\operatorname{rank}(\Jv)\le 5.
+\]
+
+% Broader affine-log oxygen law
+\[
+\ln \COtwo(I)=a+bI,
+\]
+\[
+J_{V,\xi_3}
+=
+T_0aJ_{V,\xi_1}
+-
+T_0bJ_{V,R_c},
+\]
+\[
+v_2=(-T_0a,0,1,0,0,0,T_0b)^T.
+\]
+
+% Feasible equivalence interval under box bounds
+\[
+D=
+\left[
+\frac{\xi_1-U_1}{T_0},
+\frac{\xi_1-L_1}{T_0}
+\right]
+\cap
+[L_2-\xi_2,U_2-\xi_2].
+\]
+
+% Quotient parameter range
+\[
+\kappa\in
+[L_1+T_0L_2,\;U_1+T_0U_2].
+\]
+
+% Current density and membrane form
+\[
+j=\frac{I}{\Ac},
+\qquad
+R_m=
+\frac{K_m(I,T)}
+{\lambda-0.634-3j}.
+\]
+
+% Jacobian columns, up to the common stack-cell factor/sign convention
+\[
+\Jv
+\propto
+\left[
+1,\;
+T,\;
+T\ln\COtwo,\;
+T\ln I,\;
+\frac{I K_m(I,T)}{(\lambda-0.634-3j)^2},\;
+\ln\left(1-\frac{j}{j_{\max}}\right),\;
+-I
+\right].
+\]
+
+% OAT-sensitivity paradox
+\[
+F(\xi_1,\xi_2,z)=G(\kappa,z),
+\qquad
+\kappa=\xi_1+T_0\xi_2,
+\]
+\[
+\frac{\partial F}{\partial\xi_1}=G_{\kappa},
+\qquad
+\frac{\partial F}{\partial\xi_2}=T_0G_{\kappa},
+\]
+\[
+D_{(-T_0,1)}F=0,
+\]
+\[
+F(\xi_1-T_0\delta,\xi_2+\delta,z)
+=
+F(\xi_1,\xi_2,z).
+\]
+
+% Column-normalized condition number used in the numerical design analysis
+\[
+\operatorname{cond}_2
+=
+\frac{\sigma_{\max}}{\sigma_{\min}}.
+\]
