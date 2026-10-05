@@ -1,26 +1,51 @@
-# Locked reproduction targets
+# Locked v6 reproduction targets
 
-The manuscript audit reports the following column-normalized Jacobian behavior for the 250 W benchmark.
+## Complete Ballard Mark V replay
 
-| Design | Rank | Normalized singular values (rounded) |
-|---|---:|---|
-| c1 | 5 | five resolved values [2.4840508, 0.8306930, 0.3392128, 0.1549275, 0.0193166]; two machine-zero values O(1e-17), platform dependent |
-| c2 | 5 | five resolved values [2.4813946, 0.8320850, 0.3521625, 0.1609522, 0.0197800]; two machine-zero values O(1e-17), platform dependent |
-| c2+c3+c4 | 6 | one machine-zero singular value O(1e-16), platform dependent |
-| c1+c2 | 7 | smallest singular value ~1.25445e-8; kappa2 ~1.9785e8 |
-| all four | 7 | smallest singular value ~5.49376e-3; kappa2 ~4.5188e2 |
+Using the published Ballard benchmark convention and THRO parameter vector:
 
-The exact floating-point magnitudes of structurally zero singular values depend on the NumPy/LAPACK environment. Current Python 3.10-3.12 CI runs place them at the expected machine-zero scale while preserving the analytic ranks. The rank-deficiency statements are established by exact null directions, not by a particular machine-zero magnitude.
+- reproduced SSE: **0.8139117034917056**
+- published rounded SSE: **0.813911703**
+- feasible delta interval: approximately **[-6.788534e-4, 3.313215e-4]**
+- chosen delta: **3e-4**
+- transformed pair: **(-1.18894672, 0.003996006654)**
+- max |Delta V|: **0**
+- Delta SSE: **0**
 
-For the Ballard Mark V THRO pair used in the manuscript:
+The fixed-temperature invariance is algebraic; the complete-model replay verifies that the published benchmark implementation preserves it.
 
-- T0 = 343 K
-- xi1 = -1.08604672
-- xi2 = 0.003696006654
-- delta = 3e-4
-- transformed pair = (-1.18894672, 0.003996006654)
-- feasible delta interval is approximately [-6.78853e-4, 3.31322e-4]
-- max |Delta V| = 0 in the evaluated double-precision invariance check
-- Delta SSE = 0
+## Jacobian verification
 
-The algebraic invariance is exact; the floating-point outputs above are reproducibility diagnostics.
+- analytic vs independent complex-step maximum relative column discrepancy: **2.1461482414765403e-16**
+- fixed-pressure null-vector residual: below **1e-12** (current replay about **3.06e-20**)
+
+## Reference lambda = 13.23, column-normalized Jacobian
+
+| Design | Observations | Rank | Condition metric |
+|---|---:|---:|---:|
+| c1 | 15 | 5 | structurally singular |
+| c2 | 15 | 5 | structurally singular |
+| c2+c3+c4 | 45 | 6 | structurally singular |
+| c1+c2 | 30 | 7 | 1.97849689e8 |
+| c1+c2+c3 | 45 | 7 | 409.652944671 |
+| all four | 60 | 7 | 451.883733868 |
+| balanced all-four | 30 | 7 | 447.223138834 |
+
+Condition number is not a monotone measure of total information: c1+c2+c3 has a slightly lower scaled condition number than the all-four design at the reference point.
+
+## Lambda robustness
+
+On a deterministic 501-point grid over the published **lambda in [10,24]** range:
+
+- c1 remains rank 5;
+- c2 remains rank 5;
+- c2+c3+c4 remains rank 6;
+- c1+c2 remains rank 7 with column-normalized condition number about **1.75e8 to 2.69e8**;
+- all four remains rank 7 with about **428.5 to 498.9**;
+- balanced all-four 30 remains rank 7 with about **426.2 to 487.6**.
+
+With common parameter-box scaling, the absolute numbers change but the orders-of-magnitude separation persists.
+
+## Claim boundary
+
+The fixed-temperature transformation proves finite non-injectivity along a feasible equivalence class. Multi-temperature rank 7 proves only full local numerical rank at the evaluated point, not global identifiability.
