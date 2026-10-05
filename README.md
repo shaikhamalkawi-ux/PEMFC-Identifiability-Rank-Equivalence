@@ -38,13 +38,13 @@ Using the reference point `lambda = 13.23` for the membrane-resistance sensitivi
 
 | Design | Numerical rank | Smallest normalized singular value | Normalized condition number |
 |---|---:|---:|---:|
-| c1 only | 5 | ~8.30e-18 | structurally singular |
-| c2 only | 5 | ~5.30e-18 | structurally singular |
-| c2+c3+c4 (same T) | 6 | ~1.87e-16 | structurally singular |
+| c1 only | 5 | machine zero, O(1e-17), platform dependent | structurally singular |
+| c2 only | 5 | machine zero, O(1e-17), platform dependent | structurally singular |
+| c2+c3+c4 (same T) | 6 | machine zero, O(1e-16), platform dependent | structurally singular |
 | c1+c2 | 7 | ~1.254e-8 | ~1.98e8 |
 | c1+c2+c3+c4 | 7 | ~5.494e-3 | ~4.52e2 |
 
-The current complex-step run gives a maximum relative column discrepancy of approximately `2.15e-16`. Exact rank-deficiency statements follow analytically from null directions; floating-point singular values are numerical reproductions, not the proof.
+The current complex-step run gives a maximum relative column discrepancy of approximately `2.15e-16`. Exact rank-deficiency statements follow analytically from null directions. For structurally singular designs, the tiny floating-point singular values vary across NumPy/LAPACK environments and are therefore treated as machine-zero diagnostics rather than locked numerical targets. The full-rank condition numbers above are stable across the automated Python 3.10, 3.11, and 3.12 checks.
 
 ## Run
 
@@ -77,6 +77,6 @@ This code supports the paper's narrow claim: an **experiment-conditioned rank/nu
 
 ## Associated paper
 
-**When Seven PEMFC Parameters Are Not Seven Identifiable Quantities: Exact Redundancy and Rank-Aware Experimental Design**  
-Author: **Ghassan Malkawi**  
-[Read the current manuscript PDF](https://drive.google.com/file/d/1FglQVZAw65e06JOfVGjVvpejqb4v0jNW/view?usp=drivesdk)
+**When Seven PEMFC Parameters Are Not Seven Identifiable Quantities: Exact Redundancy and Rank-Aware Experimental Design**
+
+Submission-candidate manuscript files are maintained separately from this reproducibility repository. The repository authorship record remains in `AUTHORS.md` and `CITATION.cff`.
