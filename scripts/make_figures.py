@@ -89,8 +89,8 @@ plt.close(fig)
 
 # Figure 3 — conditioning robustness across the published lambda range
 lams = np.linspace(10.0, 24.0, 501)
-cond_c12, cond_balanced, cond_all = [], [], []
-idx_bal = {
+cond_c12, cond_matched, cond_all = [], [], []
+idx_matched = {
     "c1": [0,2,4,6,8,10,12,14],
     "c2": [0,2,4,6,8,10,12,14],
     "c3": [0,2,5,7,9,12,14],
@@ -103,13 +103,13 @@ for lam in lams:
         JJ[name] = jacobian_airfed(c["I"], c["T"], A, l_um, Jmax, Ncell, lam, c["PC"])
     M12 = np.vstack([JJ["c1"], JJ["c2"]])
     Mall = np.vstack([JJ["c1"], JJ["c2"], JJ["c3"], JJ["c4"]])
-    Mbal = np.vstack([JJ[n][idx_bal[n]] for n in ("c1","c2","c3","c4")])
-    s12 = normalized_svd(M12); sa = normalized_svd(Mall); sb = normalized_svd(Mbal)
-    cond_c12.append(s12[0]/s12[-1]); cond_all.append(sa[0]/sa[-1]); cond_balanced.append(sb[0]/sb[-1])
+    Mmatched = np.vstack([JJ[n][idx_matched[n]] for n in ("c1","c2","c3","c4")])
+    s12 = normalized_svd(M12); sa = normalized_svd(Mall); sb = normalized_svd(Mmatched)
+    cond_c12.append(s12[0]/s12[-1]); cond_all.append(sa[0]/sa[-1]); cond_matched.append(sb[0]/sb[-1])
 
 fig, ax = plt.subplots(figsize=(7.3, 5.2))
 ax.plot(lams, cond_c12, linestyle="-", linewidth=1.8, label="c1+c2 (30 observations)")
-ax.plot(lams, cond_balanced, linestyle="--", linewidth=1.8, label="four conditions, balanced 30 observations")
+ax.plot(lams, cond_matched, linestyle="--", linewidth=1.8, label="four conditions, observation-count-matched (30)")
 ax.plot(lams, cond_all, linestyle=":", linewidth=1.8, label="all four conditions (60 observations)")
 ax.set_yscale("log")
 ax.set_xlabel(r"Membrane water-content parameter $\lambda$")
