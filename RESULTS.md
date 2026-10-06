@@ -1,4 +1,4 @@
-# Locked v6 reproduction targets
+# v7 reproduction targets
 
 ## Complete Ballard Mark V replay
 
@@ -19,6 +19,10 @@ The fixed-temperature invariance is algebraic; the complete-model replay verifie
 - analytic vs independent complex-step maximum relative column discrepancy: **2.1461482414765403e-16**
 - fixed-pressure null-vector residual: below **1e-12** (current replay about **3.06e-20**)
 
+## Numerical-rank tolerance
+
+Numerical rank is the number of singular values greater than **tau = sigma_1 max(m,n) eps_machine**.
+
 ## Reference lambda = 13.23, column-normalized Jacobian
 
 | Design | Observations | Rank | Condition metric |
@@ -29,22 +33,24 @@ The fixed-temperature invariance is algebraic; the complete-model replay verifie
 | c1+c2 | 30 | 7 | 1.97849689e8 |
 | c1+c2+c3 | 45 | 7 | 409.652944671 |
 | all four | 60 | 7 | 451.883733868 |
-| balanced all-four | 30 | 7 | 447.223138834 |
+| observation-count-matched all-four | 30 | 7 | 447.223138834 |
 
 Condition number is not a monotone measure of total information: c1+c2+c3 has a slightly lower scaled condition number than the all-four design at the reference point.
 
 ## Lambda robustness
 
-On a deterministic 501-point grid over the published **lambda in [10,24]** range:
+On a deterministic 501-point grid over the published **lambda in [10,24]** interval:
 
 - c1 remains rank 5;
 - c2 remains rank 5;
 - c2+c3+c4 remains rank 6;
 - c1+c2 remains rank 7 with column-normalized condition number about **1.75e8 to 2.69e8**;
 - all four remains rank 7 with about **428.5 to 498.9**;
-- balanced all-four 30 remains rank 7 with about **426.2 to 487.6**.
+- observation-count-matched all-four 30 remains rank 7 with about **426.2 to 487.6**.
 
-With common parameter-box scaling, the absolute numbers change but the orders-of-magnitude separation persists.
+These are grid evaluations, not a proof over the continuous interval.
+
+With common parameter-box scaling, **J_box = J diag(U_i-L_i)**, the absolute numbers change but the orders-of-magnitude separation persists.
 
 ## Claim boundary
 
