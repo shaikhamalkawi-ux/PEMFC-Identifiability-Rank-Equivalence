@@ -32,16 +32,24 @@ This repository reproduces the manuscript's structural-identifiability and exper
    - c1+c2: local rank 7, `cond2 ~ 1.98e8`;
    - all four conditions: local rank 7, `cond2 ~ 4.52e2`.
 
-5. **Equal-budget design check**
-   A deterministic 30-observation design distributed across all four conditions remains rank 7 and gives `cond2 ~ 447.22`, compared with `~1.98e8` for the 30-observation c1+c2 design.
+5. **Observation-count-matched design check**
+   A deterministic 30-observation design distributed across all four conditions remains rank 7 and gives `cond2 ~ 447.22`, compared with `~1.98e8` for the 30-observation c1+c2 design. Matching the number of observations does not imply equal experimental cost.
 
 6. **Robustness checks**
    - deterministic 501-point sweep over the published `lambda in [10,24]` range;
    - primary unit-column normalization and common published parameter-box scaling;
-   - the orders-of-magnitude conditioning separation between c1+c2 and the more diverse designs persists.
+   - the orders-of-magnitude conditioning separation between c1+c2 and the more diverse designs persists across the evaluated grid.
 
 7. **Out-of-temperature ambiguity**
    Equivalent fixed-temperature parameter representatives can diverge when extrapolated to another temperature. For `delta=3e-4` and a 10 K change, the induced difference is 3 mV/cell, or 0.105 V for the 35-cell Ballard stack.
+
+## Numerical-rank definition
+
+Numerical rank uses the NumPy/LAPACK-style tolerance `tau = sigma_1 * max(m,n) * eps_machine`; rank is the number of singular values greater than `tau`.
+
+## Scaling definition
+
+The common parameter-box scaling is `J_box = J diag(U_1-L_1, ..., U_7-L_7)`.
 
 ## Interpretation boundary
 
