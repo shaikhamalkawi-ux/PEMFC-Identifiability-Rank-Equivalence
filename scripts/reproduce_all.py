@@ -1,4 +1,4 @@
-"""Reproduce the v6 manuscript's structural-identifiability and design checks."""
+"""Reproduce the manuscript's structural-identifiability and design checks."""
 
 from __future__ import annotations
 import sys
@@ -121,7 +121,7 @@ def complex_step_check():
     assert d<1e-12
     print(f"COMPLEX-STEP max relative column discrepancy={d:.16e}")
 
-def rank_and_equal_budget_check():
+def rank_and_observation_count_matched_check():
     d=designs(13.23)
     expected={"c1":5,"c2":5,"c2+c3+c4":6,"c1+c2":7,"all four":7}
     for name,r0 in expected.items():
@@ -170,7 +170,7 @@ def extrapolation_check():
 if __name__=="__main__":
     ballard_full_model_check()
     complex_step_check()
-    rank_and_equal_budget_check()
+    rank_and_observation_count_matched_check()
     lambda_and_scaling_check()
     extrapolation_check()
     print("REPRODUCTION: PASS")
