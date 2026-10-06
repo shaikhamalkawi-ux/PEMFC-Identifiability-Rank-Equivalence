@@ -136,7 +136,7 @@ def rank_and_observation_count_matched_check():
     assert np.isclose(call,4.518837e2,rtol=5e-5)
     assert np.isclose(c30,447.223138834,rtol=5e-9)
     assert np.isclose(c123,409.652944671,rtol=5e-9)
-    print(f"balanced four-condition 30: rank=7, cond2={c30:.9f}")
+    print(f"observation-count-matched four-condition 30: rank=7, cond2={c30:.9f}")
 
 def lambda_and_scaling_check():
     vals=np.linspace(BOUNDS["lambda"][0],BOUNDS["lambda"][1],501)
