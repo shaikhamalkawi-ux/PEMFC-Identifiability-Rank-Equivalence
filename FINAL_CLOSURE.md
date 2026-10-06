@@ -26,4 +26,4 @@ Repository author: **Ghassan Malkawi**
 
 The repository uses the complete Ballard model for the numerical invariance replay. Numerical rank uses the NumPy/LAPACK-style tolerance tau = sigma_1 max(m,n) eps_machine. Parameter-box scaling is J_box = J diag(U_i-L_i).
 
-The scope remains bounded: fixed-temperature finite equivalence is a non-injectivity result; multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability. Matching the number of observations does not imply equal experimental cost.
+The scope remains bounded: fixed-temperature continuous feasible equivalence establishes non-injectivity; multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability. Matching the number of observations does not imply equal experimental cost.
