@@ -1,4 +1,4 @@
-"""Generate the three manuscript figures from locked repository values."""
+"""Generate the three manuscript figures from the reproducibility values."""
 
 from __future__ import annotations
 
