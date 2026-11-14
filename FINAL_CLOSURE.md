@@ -1,6 +1,6 @@
-# v7 reproducibility closure
+# v10 reproducibility closure
 
-Closure date: 6 October 2026
+Closure date: 14 November 2026
 
 Associated manuscript:
 
@@ -8,22 +8,34 @@ Associated manuscript:
 
 Repository author: **Ghassan Malkawi**
 
-## v7 closure status
+## v10 closure status
 
 - Complete Ballard Mark V voltage-model replay: PASS.
-- Published rounded Ballard THRO SSE reproduction: PASS.
 - Exact fixed-temperature voltage/SSE invariance: PASS.
-- Fixed-pressure second null direction: PASS.
+- Fixed-pressure / affine-log second null direction: PASS.
 - Full seven-column analytic Jacobian audit: PASS.
 - Independent complex-step derivative check: PASS.
 - Single-condition rank 5: PASS.
 - Same-temperature pressure-diversity rank 6: PASS.
 - c1+c2 local rank 7 with severe conditioning: PASS.
-- Deterministic observation-count-matched four-condition 30-observation design: PASS.
-- 501-point lambda-grid robustness over published [10,24]: PASS.
-- Common parameter-box scaling robustness: PASS.
-- Automated Python 3.10-3.12 workflow remains the CI target.
+- Observation-count-matched four-condition 30-point design: PASS.
+- Lambda-grid and parameter-box scaling robustness: PASS.
+- Possibilistic temperature-level robustness: PASS.
+- Symmetry-generator residual checks: PASS.
+- Nullspace-principal-angle calculations: PASS.
 
-The repository uses the complete Ballard model for the numerical invariance replay. Numerical rank uses the NumPy/LAPACK-style tolerance tau = sigma_1 max(m,n) eps_machine. Parameter-box scaling is J_box = J diag(U_i-L_i).
+## v10 interpretation layer
 
-The scope remains bounded: fixed-temperature continuous feasible equivalence establishes non-injectivity; multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability. Matching the number of observations does not imply equal experimental cost.
+The exact fixed-temperature transformation is written as a one-parameter output-preserving additive symmetry action. Under the affine-log oxygen law the two exact null directions form a commuting two-parameter action. The existing quotient coordinates are invariants of those actions.
+
+For stacked experiments, `ker(J_stack) = intersection ker(J_i)`. Principal angles between condition-specific nullspaces, computed after common parameter-box scaling, explain why exact rank restoration can coexist with severe practical ill-conditioning.
+
+Key diagnostic:
+- c1+c2 theta_min ≈ **1.69e-4 deg**;
+- c1+c2+c3 and all-four theta_min ≈ **0.377286 deg**.
+
+The possibilistic temperature-level test is linked to the same symmetry-breaking geometry: at the 5 K support-touching threshold equal realized temperature levels become admissible and the universal symmetry-breaking angle can collapse to zero.
+
+## Scope boundary
+
+No novelty is claimed for Lie symmetries or principal-angle methods themselves. Their role is explanatory. Locked scientific results from earlier versions remain unchanged.
