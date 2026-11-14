@@ -8,7 +8,7 @@ Reproducibility materials for:
 
 **Repository author: Ghassan Malkawi**
 
-This repository reproduces the manuscript's structural-identifiability, experimental-design, possibilistic-robustness, symmetry/nullspace-geometry, and information-geometry results for the common seven-free-parameter Amphlett-type PEMFC benchmark.
+This repository reproduces the manuscript's structural-identifiability, experimental-design, possibilistic-robustness, symmetry/nullspace-geometry, information-geometry, and gauge-fixing results for the common seven-free-parameter Amphlett-type PEMFC benchmark.
 
 ## What is reproduced
 
@@ -31,6 +31,10 @@ This repository reproduces the manuscript's structural-identifiability, experime
    - equal-count c1+c2 versus matched-four comparison;
    - normalized Gram determinant and sensitivity volume;
    - Eckart-Young spectral distance to the nearest rank-deficient sensitivity matrix.
+11. Prior/regularization dependence as gauge fixing:
+   - the voltage likelihood is constant along the exact fixed-temperature orbit;
+   - a prior, penalty, or bound can select a representative without adding voltage-data information;
+   - closed-form quadratic-penalty representatives are verified on the complete Ballard model.
 
 ## Key geometry values at lambda = 13.23
 
@@ -44,7 +48,7 @@ This repository reproduces the manuscript's structural-identifiability, experime
 
 The principal angle is a scaling-dependent diagnostic, not a theorem determining the full condition number. All quoted angles use the same published parameter-box metric.
 
-## Key v11 equal-count information values
+## Key equal-count information values
 
 Both designs below use 30 voltage observations.
 
@@ -57,6 +61,18 @@ Both designs below use 30 voltage observations.
 | normalized sigma_7 distance | 1.25445e-8 | 5.49855e-3 | 4.38325e5x |
 
 The result is not mainly an increase in total sensitivity: the trace rises only 6.8%. Condition diversity redistributes information into directions that are almost unobserved in c1+c2.
+
+## Gauge-fixing result
+
+Along the exact Ballard orbit
+
+`theta(delta) = theta0 + delta*(-T0,1,0,0,0,0,0)`,
+
+the voltage likelihood is constant. For a quadratic penalty centered at `mu` with precision matrix `Lambda`, the selected unconstrained representative is
+
+`delta* = -v^T Lambda (theta0-mu) / (v^T Lambda v)`,
+
+clipped to the feasible delta interval. Raw-coordinate and box-normalized penalties select different `(xi1,xi2)` pairs, while every selected pair reproduces identical Ballard voltage and SSE. The selected uniqueness is therefore supplied by the penalty/prior, not by the voltage observations.
 
 ## Numerical-rank definition
 
@@ -74,12 +90,13 @@ python scripts/reproduce_all.py
 python scripts/possibilistic_temperature_levels.py
 python scripts/symmetry_nullspace_geometry.py
 python scripts/information_geometry_oed.py
+python scripts/gauge_fixing_prior_dependence.py
 python scripts/make_figures.py
 ```
 
 ## Interpretation boundary
 
-The fixed-temperature continuous feasible equivalence establishes non-injectivity. Multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability. Lie/parameter symmetries and principal angles are established mathematical tools; their use here is explanatory and benchmark-specific, not claimed as a new mathematical theory. Fisher/confidence-region interpretations additionally assume the usual local linearization and independent homoscedastic Gaussian voltage errors. Gram-volume and Eckart-Young distance statements are deterministic under the declared scaling/normalization. The deterministic matched 30-point design is not claimed to be globally optimal among all possible 30-point designs.
+The fixed-temperature continuous feasible equivalence establishes non-injectivity. Multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability. Lie/parameter symmetries, principal angles, Fisher criteria, and gauge fixing are established tools; their use here is explanatory and benchmark-specific, not claimed as a new mathematical theory. A physically justified external prior can contribute external information, but it does not make the voltage likelihood informative along an exact null direction. Fisher/confidence-region interpretations additionally assume the usual local linearization and independent homoscedastic Gaussian voltage errors. Gram-volume and Eckart-Young distance statements are deterministic under the declared scaling/normalization. The deterministic matched 30-point design is not claimed to be globally optimal among all possible 30-point designs.
 
 ## Data provenance
 
