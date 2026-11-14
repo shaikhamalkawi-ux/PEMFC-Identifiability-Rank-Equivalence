@@ -1,4 +1,4 @@
-# v10 reproduction targets
+# v11 reproduction targets
 
 ## Locked core results
 
@@ -36,6 +36,23 @@ Using common parameter-box scaling:
 
 The c1+c2 design is locally full rank but has almost tangent condition-specific nullspaces. Same-temperature pressure diversity collapses the low-temperature nullity from 2 to 1; temperature diversity then separates the remaining universal fixed-temperature direction.
 
+## v11 Fisher / OED / rank-distance interpretation
+
+At equal observation count (30 versus 30):
+
+| Metric | c1+c2 | matched 30 | matched/c1+c2 |
+|---|---:|---:|---:|
+| box-scaled trace information | 48060.3819 | 51313.1559 | 1.067681 |
+| E-information | 4.873228e-13 | 2.142465e-3 | 4.396398e9 |
+| D-information geometric mean | 0.31488297 | 14.05892323 | 44.648091 |
+| A-information | 3.411260e-12 | 1.473949e-2 | 4.320834e9 |
+| normalized Gram determinant | 3.454056e-24 | 7.822967e-13 | 2.264864e11 |
+| normalized sigma_7 rank distance | 1.254448e-8 | 5.498555e-3 | 4.383247e5 |
+
+The matched design adds only **6.8%** total box-scaled sensitivity but increases the weakest-direction information by **4.40e9**. Its normalized sensitivity matrix is about **4.38e5** times farther from rank loss in spectral norm.
+
+Adding c4 to c1+c2+c3 slightly worsens the primary column-normalized condition number (409.65 -> 451.88) while increasing box-scaled E-information by **22.5%**, D-information by **23.7%**, A-information by **22.2%**, and the information trace by **33.0%**. This verifies that condition number is not a monotone measure of total information.
+
 ## Claim boundary
 
-Principal angles are computed under the declared common parameter-box metric and are used as geometric diagnostics. They do not by themselves determine the full condition number.
+Principal angles and information criteria are computed under declared common scalings and are local diagnostics. Fisher/confidence-region interpretations assume the usual local linearization and independent homoscedastic Gaussian voltage errors. The deterministic matched 30-point design is not claimed to be globally optimal among all possible 30-point designs.
