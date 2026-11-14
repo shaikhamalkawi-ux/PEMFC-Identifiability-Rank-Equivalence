@@ -8,7 +8,7 @@ Reproducibility materials for:
 
 **Repository author: Ghassan Malkawi**
 
-This repository reproduces the manuscript's structural-identifiability, experimental-design, possibilistic-robustness, and symmetry/nullspace-geometry results for the common seven-free-parameter Amphlett-type PEMFC benchmark.
+This repository reproduces the manuscript's structural-identifiability, experimental-design, possibilistic-robustness, symmetry/nullspace-geometry, and information-geometry results for the common seven-free-parameter Amphlett-type PEMFC benchmark.
 
 ## What is reproduced
 
@@ -25,8 +25,14 @@ This repository reproduces the manuscript's structural-identifiability, experime
    - affine-log case as a commuting two-parameter action;
    - quotient invariants matching the reduced coordinates;
    - principal-angle diagnostics in common parameter-box coordinates.
+10. Fisher/Gram/optimal-design interpretation:
+   - box-scaled sensitivity-information matrix;
+   - E-information, normalized D-information, A-information, and information trace;
+   - equal-count c1+c2 versus matched-four comparison;
+   - normalized Gram determinant and sensitivity volume;
+   - Eckart-Young spectral distance to the nearest rank-deficient sensitivity matrix.
 
-## Key v10 geometry values at lambda = 13.23
+## Key geometry values at lambda = 13.23
 
 | Design | low-T nullity | smallest principal angle | column-normalized cond2 |
 |---|---:|---:|---:|
@@ -37,6 +43,20 @@ This repository reproduces the manuscript's structural-identifiability, experime
 | all four | 1 | 0.377286 deg | 451.88 |
 
 The principal angle is a scaling-dependent diagnostic, not a theorem determining the full condition number. All quoted angles use the same published parameter-box metric.
+
+## Key v11 equal-count information values
+
+Both designs below use 30 voltage observations.
+
+| Metric | c1+c2 | matched four-condition | improvement |
+|---|---:|---:|---:|
+| trace information | 4.8060e4 | 5.1313e4 | 1.0677x |
+| E-information | 4.8732e-13 | 2.1425e-3 | 4.3964e9x |
+| D-information geometric mean | 0.314883 | 14.0589 | 44.6481x |
+| A-information | 3.4113e-12 | 1.4739e-2 | 4.3208e9x |
+| normalized sigma_7 distance | 1.25445e-8 | 5.49855e-3 | 4.38325e5x |
+
+The result is not mainly an increase in total sensitivity: the trace rises only 6.8%. Condition diversity redistributes information into directions that are almost unobserved in c1+c2.
 
 ## Numerical-rank definition
 
@@ -53,12 +73,13 @@ python -m pip install -r requirements.txt
 python scripts/reproduce_all.py
 python scripts/possibilistic_temperature_levels.py
 python scripts/symmetry_nullspace_geometry.py
+python scripts/information_geometry_oed.py
 python scripts/make_figures.py
 ```
 
 ## Interpretation boundary
 
-The fixed-temperature continuous feasible equivalence establishes non-injectivity. Multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability. Lie/parameter symmetries and principal angles are established mathematical tools; their use here is explanatory and benchmark-specific, not claimed as a new mathematical theory.
+The fixed-temperature continuous feasible equivalence establishes non-injectivity. Multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability. Lie/parameter symmetries and principal angles are established mathematical tools; their use here is explanatory and benchmark-specific, not claimed as a new mathematical theory. Fisher/confidence-region interpretations additionally assume the usual local linearization and independent homoscedastic Gaussian voltage errors. Gram-volume and Eckart-Young distance statements are deterministic under the declared scaling/normalization. The deterministic matched 30-point design is not claimed to be globally optimal among all possible 30-point designs.
 
 ## Data provenance
 
