@@ -2,80 +2,64 @@
 
 [![reproduce](https://github.com/shaikhamalkawi-ux/PEMFC-Identifiability-Rank-Equivalence/actions/workflows/reproduce.yml/badge.svg)](https://github.com/shaikhamalkawi-ux/PEMFC-Identifiability-Rank-Equivalence/actions/workflows/reproduce.yml)
 
-Reproducibility materials for the manuscript:
+Reproducibility materials for:
 
 **Experiment-Conditioned Parameter Redundancy in Seven-Parameter PEMFC Models: Exact Equivalence and Rank-Aware Experimental Design**
 
 **Repository author: Ghassan Malkawi**
 
-This repository reproduces the manuscript's structural-identifiability and experimental-design results for the common seven-free-parameter Amphlett-type PEMFC benchmark.
+This repository reproduces the manuscript's structural-identifiability, experimental-design, possibilistic-robustness, and symmetry/nullspace-geometry results for the common seven-free-parameter Amphlett-type PEMFC benchmark.
 
 ## What is reproduced
 
-1. **Complete Ballard Mark V replay and exact fixed-temperature invariance**
-   - full Nernst, activation, membrane/ohmic, and concentration model;
-   - reproduced THRO SSE: `0.8139117034917056` versus published rounded `0.813911703`;
-   - `(xi1,xi2) -> (xi1-T0*delta,xi2+delta)` gives `max |Delta V|=0` and `Delta SSE=0` in the evaluated arithmetic.
+1. Complete Ballard Mark V replay and exact fixed-temperature invariance.
+2. Exact fixed-temperature and affine-log null directions.
+3. Full seven-parameter analytic Jacobian and independent complex-step verification.
+4. 250 W rank/conditioning sequence: rank 5, rank 6, rank 7 with severe conditioning, then rank 7 with substantially lower conditioning.
+5. Observation-count-matched 30-point four-condition design.
+6. Lambda-range and common parameter-box scaling robustness.
+7. Out-of-temperature ambiguity induced by the fixed-temperature equivalence family.
+8. Possibilistic temperature-level stress test over nested alpha-cuts, including the exact 5 K support-touching threshold.
+9. Parameter-symmetry and nullspace-principal-angle interpretation:
+   - fixed-T transformation as a one-parameter output-preserving symmetry action;
+   - affine-log case as a commuting two-parameter action;
+   - quotient invariants matching the reduced coordinates;
+   - principal-angle diagnostics in common parameter-box coordinates.
 
-2. **Exact null directions**
-   - the universal fixed-temperature xi1/xi2 direction;
-   - the second fixed-pressure / affine-log oxygen-law direction.
+## Key v10 geometry values at lambda = 13.23
 
-3. **Full seven-parameter analytic Jacobian**
-   - independently verified by complex-step differentiation;
-   - current maximum relative column discrepancy is approximately `2.15e-16`.
+| Design | low-T nullity | smallest principal angle | column-normalized cond2 |
+|---|---:|---:|---:|
+| c1+c2 | 2 | 1.69e-4 deg | 1.9785e8 |
+| c1+c3 | 2 | 4.89e-4 deg | 5.2780e7 |
+| c1+c4 | 2 | 2.34e-4 deg | 1.3502e8 |
+| c1+c2+c3 | 1 | 0.377286 deg | 409.65 |
+| all four | 1 | 0.377286 deg | 451.88 |
 
-4. **Rank and conditioning of the 250 W benchmark**
-   - c1: rank 5;
-   - c2: rank 5;
-   - c2+c3+c4 at one temperature: rank 6;
-   - c1+c2: local rank 7, `cond2 ~ 1.98e8`;
-   - all four conditions: local rank 7, `cond2 ~ 4.52e2`.
-
-5. **Observation-count-matched design check**
-   A deterministic 30-observation design distributed across all four conditions remains rank 7 and gives `cond2 ~ 447.22`, compared with `~1.98e8` for the 30-observation c1+c2 design. Matching the number of observations does not imply equal experimental cost.
-
-6. **Robustness checks**
-   - deterministic 501-point sweep over the published `lambda in [10,24]` range;
-   - primary unit-column normalization and common published parameter-box scaling;
-   - the orders-of-magnitude conditioning separation between c1+c2 and the more diverse designs persists across the evaluated grid.
-
-7. **Out-of-temperature ambiguity**
-   Equivalent fixed-temperature parameter representatives can diverge when extrapolated to another temperature. For `delta=3e-4` and a 10 K change, the induced difference is 3 mV/cell, or 0.105 V for the 35-cell Ballard stack.
+The principal angle is a scaling-dependent diagnostic, not a theorem determining the full condition number. All quoted angles use the same published parameter-box metric.
 
 ## Numerical-rank definition
 
-Numerical rank uses the NumPy/LAPACK-style tolerance `tau = sigma_1 * max(m,n) * eps_machine`; rank is the number of singular values greater than `tau`.
+Numerical rank uses the NumPy/LAPACK-style tolerance `tau = sigma_1 * max(m,n) * eps_machine`.
 
 ## Scaling definition
 
 The common parameter-box scaling is `J_box = J diag(U_1-L_1, ..., U_7-L_7)`.
-
-## Interpretation boundary
-
-The fixed-temperature finite transformation establishes non-injectivity along a feasible equivalence class. By contrast, rank 7 at a multi-temperature evaluation point establishes only full local numerical rank; it does not prove global identifiability. Condition number is a scale-dependent anisotropy measure, not a monotone measure of total information.
 
 ## Run
 
 ```bash
 python -m pip install -r requirements.txt
 python scripts/reproduce_all.py
+python scripts/possibilistic_temperature_levels.py
+python scripts/symmetry_nullspace_geometry.py
 python scripts/make_figures.py
 ```
 
-Python 3.10+ is recommended. The automated workflow runs on Python 3.10, 3.11, and 3.12.
+## Interpretation boundary
+
+The fixed-temperature continuous feasible equivalence establishes non-injectivity. Multi-temperature rank 7 is a local numerical-rank result and is not claimed to prove global identifiability. Lie/parameter symmetries and principal angles are established mathematical tools; their use here is explanatory and benchmark-specific, not claimed as a new mathematical theory.
 
 ## Data provenance
 
-The current vectors, operating conditions, published parameter bounds, and benchmark parameter values come from:
-
-Y. Bouali, K. Imarazene, B. Alamri, and E. M. Berkouk,
-"Optimization of proton exchange membrane fuel cell design parameters using Tianji's horse racing optimization,"
-*Scientific Reports*, 16, 4980 (2026).
-DOI: **10.1038/s41598-026-35200-6**
-
-The repository stores only the minimal numerical arrays needed for the rank/invariance reproduction. See `data/README.md` for provenance and scope.
-
-## Scope
-
-The contribution is an **experiment-conditioned rank/nullspace and equivalence-class characterization** and its benchmark/design consequences. It does not claim that PEMFC identifiability, coefficient grouping, or separable regression are new topics.
+The benchmark arrays and operating conditions are traced to Bouali et al., Scientific Reports 16, 4980 (2026), DOI **10.1038/s41598-026-35200-6**.
