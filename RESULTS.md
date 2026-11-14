@@ -1,4 +1,4 @@
-# v11 reproduction targets
+# v12 reproduction targets
 
 ## Locked core results
 
@@ -36,7 +36,7 @@ Using common parameter-box scaling:
 
 The c1+c2 design is locally full rank but has almost tangent condition-specific nullspaces. Same-temperature pressure diversity collapses the low-temperature nullity from 2 to 1; temperature diversity then separates the remaining universal fixed-temperature direction.
 
-## v11 Fisher / OED / rank-distance interpretation
+## Fisher / OED / rank-distance interpretation
 
 At equal observation count (30 versus 30):
 
@@ -53,6 +53,23 @@ The matched design adds only **6.8%** total box-scaled sensitivity but increases
 
 Adding c4 to c1+c2+c3 slightly worsens the primary column-normalized condition number (409.65 -> 451.88) while increasing box-scaled E-information by **22.5%**, D-information by **23.7%**, A-information by **22.2%**, and the information trace by **33.0%**. This verifies that condition number is not a monotone measure of total information.
 
+## v12 gauge-fixing / prior-dependence result
+
+The exact Ballard orbit has feasible delta interval
+
+**[-6.788534110787171e-4, 3.313215160349855e-4]**.
+
+Four representative-selection rules give different parameter pairs but identical voltages and SSE:
+
+| Rule | delta | xi1 | xi2 |
+|---|---:|---:|---:|
+| published THRO representative | 0 | -1.08604672 | 0.003696006654 |
+| raw-coordinate L2 toward zero | -6.7885341108e-4 | -0.8532 | 0.003017153243 |
+| raw-coordinate L2 toward box midpoint | -1.7377038672e-4 | -1.026443477 | 0.003522236268 |
+| box-normalized L2 toward box midpoint | -2.0507664679e-4 | -1.015705430 | 0.003490930007 |
+
+For every row, **max |Delta V| = 0** and **Delta SSE = 0** in evaluated double precision. Thus priors, penalties, or bounds can fix a representative of an exact equivalence orbit without adding voltage-likelihood information along that orbit.
+
 ## Claim boundary
 
-Principal angles and information criteria are computed under declared common scalings and are local diagnostics. Fisher/confidence-region interpretations assume the usual local linearization and independent homoscedastic Gaussian voltage errors. The deterministic matched 30-point design is not claimed to be globally optimal among all possible 30-point designs.
+Principal angles and information criteria are computed under declared common scalings and are local diagnostics. Fisher/confidence-region interpretations assume the usual local linearization and independent homoscedastic Gaussian voltage errors. Gauge fixing describes representative selection along an exact likelihood-flat orbit; a physically justified external prior can still contribute external information. The deterministic matched 30-point design is not claimed to be globally optimal among all possible 30-point designs. The exploratory nine-point greedy D-optimal design is not a manuscript result and is held for future cost/noise-aware validation.
