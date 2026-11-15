@@ -54,8 +54,8 @@ for name,delta in rules:
                      max_abs_voltage_difference=dv,delta_SSE=dsse))
 
 pd.DataFrame(rows).to_csv(OUT/'gauge_fixing_representatives.csv',index=False)
-with open(OUT/'REPRODUCTION_V12_GAUGE.txt','w',encoding='utf-8') as f:
-    f.write('PROJECT53 V12 GAUGE-FIXING REPRODUCTION\n')
+with open(OUT/'REPRODUCTION_V13_GAUGE.txt','w',encoding='utf-8') as f:
+    f.write('PROJECT53 V13 GAUGE-FIXING REPRODUCTION\n')
     f.write(f'feasible_delta=[{lo:.15e},{hi:.15e}]\n')
     for r in rows:
         f.write(f"{r['selection_rule']}: delta={r['delta']:.15e}, xi1={r['xi1']:.15e}, xi2={r['xi2']:.15e}, max_dV={r['max_abs_voltage_difference']:.1e}, dSSE={r['delta_SSE']:.1e}\n")
