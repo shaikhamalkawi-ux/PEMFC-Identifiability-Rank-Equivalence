@@ -1,6 +1,6 @@
-# v11 reproducibility closure
+# v13 unified-mechanism reproducibility closure
 
-Closure date: 14 November 2026
+Closure date: 15 November 2026
 
 Associated manuscript:
 
@@ -8,9 +8,10 @@ Associated manuscript:
 
 Repository author: **Ghassan Malkawi**
 
-## v11 closure status
+## v13 closure status
 
 - Complete Ballard Mark V voltage-model replay: PASS.
+- Published rounded Ballard THRO SSE reproduction: PASS.
 - Exact fixed-temperature voltage/SSE invariance: PASS.
 - Fixed-pressure / affine-log second null direction: PASS.
 - Full seven-column analytic Jacobian audit: PASS.
@@ -26,17 +27,38 @@ Repository author: **Ghassan Malkawi**
 - Fisher / optimal-design information calculations: PASS.
 - Gram determinant / sensitivity-volume calculation: PASS.
 - Eckart-Young distance-to-rank-loss calculation: PASS.
+- Symmetry-breaking-order calculation: PASS.
+- Gauge-fixing / prior-dependence calculation: PASS.
+- Unified runner `scripts/reproduce_v13_all.py`: PASS.
+
+## Reconciled v12 branches
+
+v13 reconciles two independently developed v12 branches:
+
+1. **Order of symmetry breaking.** With one pressure condition at each temperature level, the weakest box-scaled singular direction opens quadratically in temperature separation. Prior same-temperature pressure diversity removes the pressure-dependent ambiguity and changes the opening to linear.
+2. **Gauge fixing.** Priors, penalties, bounds, or parameter conventions may select a unique representative from an exact equivalence orbit, but the fixed-temperature voltage likelihood remains flat along that orbit.
 
 ## Unified interpretation
 
-The exact fixed-temperature transformation is written as a one-parameter output-preserving additive symmetry action. Under the affine-log oxygen law the two exact null directions form a commuting two-parameter action. The existing quotient coordinates are invariants of those actions.
+The complete mechanism is:
 
-For stacked experiments, `ker(J_stack) = intersection ker(J_i)`. Principal angles between condition-specific nullspaces, computed after common parameter-box scaling, explain why exact rank restoration can coexist with severe practical ill-conditioning.
+`exact symmetry -> rank loss -> quotient coordinates -> symmetry breaking -> singular-value opening order -> near-null geometry -> information redistribution -> robust experimental design`,
 
-The v11 information layer quantifies the same mechanism. At the same 30-observation count, the matched four-condition design raises total box-scaled sensitivity by only about **6.8%**, but raises the weakest information eigenvalue by **4.3964e9** and the normalized spectral distance to rank deficiency by **4.38325e5**. Thus its advantage is principally redistribution of information into previously weak directions rather than simple data-volume growth.
+with prior/regularization acting only as representative-selection rules along likelihood-flat directions.
 
-The possibilistic temperature-level test remains linked to the same symmetry-breaking geometry: at the 5 K support-touching threshold equal realized temperature levels become admissible and the universal symmetry-breaking angle can collapse to zero.
+## Package QA
+
+- Main manuscript: 31 pages.
+- Supplementary Material: 19 pages.
+- References: 37/37 cited.
+- Undefined citations/references: 0.
+- Overfull boxes: 0.
+- Type 3 fonts: 0.
+- Clean-source visual parity: 0/31 changed Main pages and 0/19 changed Supplement pages.
+- One non-blocking underfull hbox remains in the Main; rendered visual QA passes.
+- Source ZIP integrity: PASS.
+- Reproducibility ZIP integrity: PASS.
 
 ## Scope boundary
 
-No novelty is claimed for Lie symmetries, principal-angle methods, standard E/D/A optimal-design criteria, Hadamard's inequality, or the Eckart-Young theorem themselves. Their role is explanatory. Fisher/confidence-region interpretations are local and require the stated error assumptions. The matched 30-point design is a deterministic observation-count-matched comparison, not a globally optimized design. Locked scientific results from earlier versions remain unchanged.
+No novelty is claimed for Lie symmetries, principal-angle methods, standard E/D/A criteria, Hadamard's inequality, the Eckart-Young theorem, singular-value perturbation theory, or gauge fixing as general mathematical tools. Their use is explanatory and benchmark-specific. The perturbation laws are local near the equal-temperature boundary. Fuzzy sets are stress-test possibility distributions. A physically justified external prior may contribute external information, but it does not make the voltage likelihood informative along an exact null direction. The sparse nine-point greedy design remains future work and is not a manuscript result.
