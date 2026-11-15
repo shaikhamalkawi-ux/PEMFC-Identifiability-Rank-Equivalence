@@ -85,23 +85,30 @@ fig.savefig(FIG/"Figure_S2_OED_Information_Improvement.png", dpi=300)
 fig.savefig(FIG/"Figure_S2_OED_Information_Improvement.pdf")
 plt.close(fig)
 
-checks = [
-    (base.trace_information, 48060.38190185165, 1e-9),
-    (matched.trace_information, 51313.15591429629, 1e-9),
-    (base.E_information, 4.873228271537714e-13, 1e-20),
-    (matched.E_information, 0.002142464970338894, 1e-15),
-    (ratios["E-information"], 4396397728.4873905, 1e-3),
-    (ratios["D-information geometric mean"], 44.64809052785325, 1e-10),
-    (ratios["A-information"], 4320834099.036076, 1e-3),
-    (base.normalized_sigma7_distance, 1.2544478413997039e-08, 1e-18),
-    (matched.normalized_sigma7_distance, 0.005498554538900077, 1e-15),
-    (ratios["Distance to rank deficiency"], 438324.6841705932, 1e-6),
-]
-for got, exp, atol in checks:
-    if not math.isclose(float(got), float(exp), rel_tol=1e-10, abs_tol=atol):
-        raise AssertionError((got, exp))
+# The weakest c1+c2 information direction is near machine precision, so exact
+# last-digit locking is BLAS/LAPACK-version dependent. Use tight but portable
+# tolerances that preserve all scientific orders of magnitude.
+def check(name, got, expected, rel_tol, abs_tol=0.0):
+    if not math.isclose(float(got), float(expected), rel_tol=rel_tol, abs_tol=abs_tol):
+        raise AssertionError(f"{name}: got={got!r}, expected={expected!r}, numpy={np.__version__}")
 
+checks = [
+    ("base trace", base.trace_information, 48060.38190185165, 1e-10, 1e-8),
+    ("matched trace", matched.trace_information, 51313.15591429629, 1e-10, 1e-8),
+    ("base E", base.E_information, 4.873228271537714e-13, 2e-5, 1e-18),
+    ("matched E", matched.E_information, 0.002142464970338894, 1e-8, 1e-12),
+    ("E ratio", ratios["E-information"], 4396397728.4873905, 2e-5, 1e3),
+    ("D ratio", ratios["D-information geometric mean"], 44.64809052785325, 2e-6, 1e-6),
+    ("A ratio", ratios["A-information"], 4320834099.036076, 2e-5, 1e3),
+    ("base sigma7", base.normalized_sigma7_distance, 1.2544478413997039e-08, 2e-6, 1e-13),
+    ("matched sigma7", matched.normalized_sigma7_distance, 0.005498554538900077, 1e-8, 1e-12),
+    ("rank-distance ratio", ratios["Distance to rank deficiency"], 438324.6841705932, 2e-6, 1.0),
+]
+for args in checks:
+    check(*args)
+
+print(f"NumPy version: {np.__version__}")
 print(df)
 print("\nRatios:")
 for k,v in ratios.items(): print(f"{k}: {v:.15g}")
-print("PASS: all locked v11 information-geometry values reproduced.")
+print("PASS: locked information-geometry conclusions reproduced within portable numerical tolerances.")
