@@ -1,9 +1,9 @@
-# v12 reproduction targets
+# v13 reproduction targets
 
 ## Locked core results
 
 - Ballard full-model SSE: **0.8139117034917056**; published rounded value **0.813911703**.
-- Ballard transformed pair at delta = 3e-4: **(-1.18894672, 0.003996006654)**.
+- Ballard transformed pair at delta = 3e-4: **(-1.18894672, 0.003696006654)**.
 - max |Delta V| = **0** and Delta SSE = **0** in evaluated double precision.
 - analytic vs complex-step maximum relative Jacobian discrepancy: **2.1461482414765403e-16**.
 - c1 rank 5; c2 rank 5; c2+c3+c4 rank 6; c1+c2 rank 7; all-four rank 7.
@@ -14,6 +14,7 @@
 ## Possibilistic temperature-level robustness
 
 For triangular high/low temperature-level supports with half-width h = 4.9 K:
+
 - all sampled c1+c2 and matched-four realizations remain local rank 7;
 - at alpha = 0, c1+c2 cond2 range is about **6.90e7 to 4.04e11**;
 - matched-four range is about **229.5 to 2.12e4**;
@@ -34,8 +35,6 @@ Using common parameter-box scaling:
 | c1+c3+c4 | 6 | 1 | 0.377286 | 4.431e3 | 438.05 |
 | all four | 6 | 1 | 0.377286 | 4.570e3 | 451.88 |
 
-The c1+c2 design is locally full rank but has almost tangent condition-specific nullspaces. Same-temperature pressure diversity collapses the low-temperature nullity from 2 to 1; temperature diversity then separates the remaining universal fixed-temperature direction.
-
 ## Fisher / OED / rank-distance interpretation
 
 At equal observation count (30 versus 30):
@@ -49,17 +48,25 @@ At equal observation count (30 versus 30):
 | normalized Gram determinant | 3.454056e-24 | 7.822967e-13 | 2.264864e11 |
 | normalized sigma_7 rank distance | 1.254448e-8 | 5.498555e-3 | 4.383247e5 |
 
-The matched design adds only **6.8%** total box-scaled sensitivity but increases the weakest-direction information by **4.40e9**. Its normalized sensitivity matrix is about **4.38e5** times farther from rank loss in spectral norm.
+## v13 symmetry-breaking-order result
 
-Adding c4 to c1+c2+c3 slightly worsens the primary column-normalized condition number (409.65 -> 451.88) while increasing box-scaled E-information by **22.5%**, D-information by **23.7%**, A-information by **22.2%**, and the information trace by **33.0%**. This verifies that condition number is not a monotone measure of total information.
+| Low-temperature pressure subset | eta1 | fitted exponent p | sigma_min at 0.1 K |
+|---|---:|---:|---:|
+| c2 | 1.2837e-16 | 1.998926 | 1.0457e-10 |
+| c3 | 2.9836e-16 | 2.001547 | 1.7103e-10 |
+| c4 | 1.5238e-16 | 1.999643 | 1.1064e-10 |
+| c2+c3 | 5.1230e-2 | 0.999806 | 5.1240e-3 |
+| c2+c4 | 2.0501e-2 | 1.000429 | 2.0505e-3 |
+| c3+c4 | 4.3925e-2 | 1.000427 | 4.3934e-3 |
+| c2+c3+c4 | 5.1784e-2 | 1.000036 | 5.1800e-3 |
 
-## v12 gauge-fixing / prior-dependence result
+One pressure condition per temperature level gives quadratic opening of the weakest singular direction; two or more low-temperature pressures give linear opening. At DeltaT = 0.1 K the c1+(c2+c3+c4) opening is about **4.95e7** times the c1+c2 opening.
+
+## v13 gauge-fixing / prior-dependence result
 
 The exact Ballard orbit has feasible delta interval
 
 **[-6.788534110787171e-4, 3.313215160349855e-4]**.
-
-Four representative-selection rules give different parameter pairs but identical voltages and SSE:
 
 | Rule | delta | xi1 | xi2 |
 |---|---:|---:|---:|
@@ -68,8 +75,14 @@ Four representative-selection rules give different parameter pairs but identical
 | raw-coordinate L2 toward box midpoint | -1.7377038672e-4 | -1.026443477 | 0.003522236268 |
 | box-normalized L2 toward box midpoint | -2.0507664679e-4 | -1.015705430 | 0.003490930007 |
 
-For every row, **max |Delta V| = 0** and **Delta SSE = 0** in evaluated double precision. Thus priors, penalties, or bounds can fix a representative of an exact equivalence orbit without adding voltage-likelihood information along that orbit.
+For every row, **max |Delta V| = 0** and **Delta SSE = 0** in evaluated double precision.
+
+## Unified closure
+
+- `python scripts/reproduce_v13_all.py`: **PASS**.
+- All 37 bibliography entries are cited; no missing or unused keys remain.
+- The exploratory nine-point greedy D-optimal design is not a manuscript result and is held for future cost/noise-aware validation.
 
 ## Claim boundary
 
-Principal angles and information criteria are computed under declared common scalings and are local diagnostics. Fisher/confidence-region interpretations assume the usual local linearization and independent homoscedastic Gaussian voltage errors. Gauge fixing describes representative selection along an exact likelihood-flat orbit; a physically justified external prior can still contribute external information. The deterministic matched 30-point design is not claimed to be globally optimal among all possible 30-point designs. The exploratory nine-point greedy D-optimal design is not a manuscript result and is held for future cost/noise-aware validation.
+Principal angles, perturbation coefficients, and information criteria are local diagnostics under declared scalings. Fisher/confidence interpretations assume the stated local Gaussian-error model. The symmetry-breaking power laws are local near the equal-temperature boundary and are not asserted as exact global laws. Gauge fixing describes representative selection along an exact likelihood-flat orbit; a physically justified external prior may still add genuine external information.
