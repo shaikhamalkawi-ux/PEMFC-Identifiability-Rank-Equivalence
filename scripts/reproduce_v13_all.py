@@ -16,18 +16,19 @@ SCRIPTS = [
 
 lines = ["PROJECT53 V13 UNIFIED REPRODUCTION"]
 for name in SCRIPTS:
+    print(f"\n=== {name} ===", flush=True)
     proc = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / name)],
         cwd=ROOT,
-        check=True,
-        capture_output=True,
+        check=False,
         text=True,
     )
-    lines.append(f"\n=== {name} ===")
-    lines.append(proc.stdout.rstrip())
+    if proc.returncode != 0:
+        raise SystemExit(f"{name} failed with exit code {proc.returncode}")
+    lines.append(name + ": PASS")
 
-lines.append("\nPROJECT53 V13 UNIFIED REPRODUCTION: PASS")
+lines.append("PROJECT53 V13 UNIFIED REPRODUCTION: PASS")
 out = ROOT / "outputs" / "REPRODUCTION_V13_ALL.txt"
 out.parent.mkdir(exist_ok=True)
 out.write_text("\n".join(lines) + "\n", encoding="utf-8")
-print("\n".join(lines[-3:]))
+print("\nPROJECT53 V13 UNIFIED REPRODUCTION: PASS")
